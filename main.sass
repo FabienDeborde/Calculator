@@ -1,2 +1,68 @@
 @import 'normalize'
 @import 'fonts'
+//@import 'effect'
+
+$dark: #2c3e50
+$light: #ecf0f1
+$red: #c0392b
+$squareSize: 100px
+
+body
+  background-color: $dark
+  font-family: 'Rubik'
+  .container
+    main
+      .main-row
+        height: 100vh
+        .main-wrapper
+          width: $squareSize * 4
+          background-color: $light
+          .calc-row
+            display: flex
+            height: $squareSize + 1px
+            border-top: 1px solid $dark
+            .control-button, #reset-container, #result-container
+              display: flex
+              font-size: 1.4em
+              align-items: center
+              height: 100%
+            .control-button, #reset-container
+              width: $squareSize
+              cursor: pointer
+              justify-content: center
+            .control-button
+              &:nth-child(odd)
+                border-left: 1px solid $dark
+                border-right: 1px solid $dark
+              &:hover
+                background-color: darken($light, 5)
+            #reset-container
+              background-color: $red
+              color: $light
+              font-weight: bold
+              letter-spacing: 1.8px
+              &:hover
+                background-color: darken($red, 5)
+            #result-container
+              justify-content: flex-end
+              width: $squareSize * 3
+              padding: 0 20px
+              background-color: white
+            .operator
+              background-color: #95a5a6
+              color: white
+              &:hover
+                background-color: darken(#95a5a6, 5)
+
+@media only screen and (max-width: 575px)
+  $squareSize: 70px
+  body .container main
+    .main-row
+      .main-wrapper
+        width: $squareSize * 4
+        .calc-row
+          height: $squareSize + 1px
+          .control-button, #reset
+            width: $squareSize
+          #result
+            width: $squareSize * 3
