@@ -48,11 +48,19 @@ body
               width: $squareSize * 3
               padding: 0 20px
               background-color: white
+              &.error
+                font-style: italic
+                color: $red
             .operator
               background-color: #95a5a6
               color: white
               &:hover
                 background-color: darken(#95a5a6, 5)
+            .equal
+              color: white
+              background-color: #2980b9
+              &:hover
+                background-color: darken(#2980b9, 5)
 
 @media only screen and (max-width: 575px)
   $squareSize: 70px

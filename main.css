@@ -478,11 +478,19 @@ body {
           width: 300px;
           padding: 0 20px;
           background-color: white; }
+          body .container main .main-row .main-wrapper .calc-row #result-container.error {
+            font-style: italic;
+            color: #c0392b; }
         body .container main .main-row .main-wrapper .calc-row .operator {
           background-color: #95a5a6;
           color: white; }
           body .container main .main-row .main-wrapper .calc-row .operator:hover {
             background-color: #87999a; }
+        body .container main .main-row .main-wrapper .calc-row .equal {
+          color: white;
+          background-color: #2980b9; }
+          body .container main .main-row .main-wrapper .calc-row .equal:hover {
+            background-color: #2472a4; }
 
 @media only screen and (max-width: 575px) {
   body .container main .main-row .main-wrapper {
