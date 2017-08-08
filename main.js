@@ -22,7 +22,9 @@ $(document).ready(function() {
     },
     // Reset the whole Calculator
     reset: function() {
+      calcState.init = true;
       calcState.currentResult = 0;
+      calcState.previousNumber = 0;
       calcState.currentNumber = [0];
       calcState.currentOperation = '';
       calcState.updateResult(calcState.currentNumber);
@@ -41,7 +43,12 @@ $(document).ready(function() {
         return a - b;
       },
       '/': function(a, b) {
-        return a / b;
+        if (b !== 0) {
+          return a / b;
+        } else {
+          resultContainer.addClass('error');
+          return 'You cannot divide by 0.'
+        }
       },
       '*': function(a, b) {
         return a * b;
@@ -117,10 +124,7 @@ $(document).ready(function() {
     var currentNumber = calcState.arrayToNumber(calcState.currentNumber);
     var previousNumber = calcState.previousNumber;
     var currentResult = calcState.currentResult;
-    if (currentNumber === 0 && currentResult !== 0) {
-      calcState.previousNumber = currentResult;
-      // do nothing
-    } else if (calcState.currentOperation !== '') {
+    if (calcState.currentOperation !== '') {
       // do the calculation
       var newNumber = calcState.calcul[calcState.currentOperation](currentResult, currentNumber);
       calcState.previousNumber = calcState.currentResult;
