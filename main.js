@@ -14,7 +14,7 @@ $(document).ready(function() {
     init: true,
     decimal: false,
     currentResult: 0,
-    previousNumber: 0,
+    previousNumber: null,
     currentNumber: '0',
     currentOperation: '',
     // Simple function to update the result on screen
@@ -26,7 +26,7 @@ $(document).ready(function() {
       calcState.init = true;
       calcState.decimal = false;
       calcState.currentResult = 0;
-      calcState.previousNumber = 0;
+      calcState.previousNumber = null;
       calcState.currentNumber = '0';
       calcState.currentOperation = '';
       calcState.updateResult(calcState.currentNumber);
@@ -89,13 +89,26 @@ $(document).ready(function() {
   operatorButtons.on('click', function(){
     var operator = this.dataset.value;
     var currentNumber = Number(calcState.currentNumber);
-    calcState.currentOperation = operator;
 
-
-    if (currentNumber !== 0 && calcState.init) {
-      calcState.currentResult = currentNumber;
+    if (calcState.currentResult !== 0 && calcState.previousNumber !== null) {
+      calcState.init = false;
     }
 
+    if (currentNumber !== 0) {
+      if (calcState.init) {
+        calcState.currentResult = currentNumber;
+      } else {
+        if (calcState.currentOperation === '') {
+          calcState.currentOperation = operator;
+        }
+        calcState.currentResult = calcState.handleCalcul(
+          calcState.currentResult,
+          currentNumber,
+          calcState.currentOperation
+        );
+      }
+    }
+    calcState.currentOperation = operator;
     calcState.updateResult(calcState.currentResult);
     calcState.resetCurrent();
 
@@ -106,7 +119,7 @@ $(document).ready(function() {
     var currentNumber = Number(calcState.currentNumber);
     var operator = calcState.currentOperation;
 
-    if (currentNumber !== 0 && calcState.init && !operator) {
+    if (currentNumber !== 0 && !operator) {
       calcState.currentResult = currentNumber;
     } else {
       if (operator) {
