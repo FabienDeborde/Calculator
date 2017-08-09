@@ -12,9 +12,10 @@ $(document).ready(function() {
   // and also the main methods to update, reset and calculate
   var calcState = {
     init: true,
+    decimal: false,
     currentResult: 0,
     previousNumber: 0,
-    currentNumber: [0],
+    currentNumber: '0',
     currentOperation: '',
     // Simple function to update the result on screen
     updateResult: function(number) {
@@ -23,16 +24,17 @@ $(document).ready(function() {
     // Reset the whole Calculator
     reset: function() {
       calcState.init = true;
+      calcState.decimal = false;
       calcState.currentResult = 0;
       calcState.previousNumber = 0;
-      calcState.currentNumber = [0];
+      calcState.currentNumber = '0';
       calcState.currentOperation = '';
       calcState.updateResult(calcState.currentNumber);
       resultContainer.removeClass('error');
     },
-    // Transform the currentNumber array into a usable number
-    arrayToNumber: function(array){
-      return Number(array.join(''));
+    resetCurrent: function() {
+      calcState.decimal = false;
+      calcState.currentNumber = '0';
     },
     // Basic calcul function
     calcul: {
@@ -54,33 +56,8 @@ $(document).ready(function() {
         return a * b;
       }
     },
-    handleCalcul: function(currentNumber, currentResult, currentOperation, previousNumber) {
-      // If it's an impossible division, display error message
-      if (currentNumber === 0 && currentOperation === '/' && !calcState.init) {
-        calcState.updateResult('You cannot divide by 0.');
-        resultContainer.addClass('error');
-      } else {
-        //Else, do the calculation
-        // If it's the first operation, just store the operator
-        if (calcState.init) {
-          calcState.currentOperation = currentOperation;
-          calcState.currentResult = currentNumber;
-        } else if (calcState.currentOperation === '') {
-          calcState.previousNumber = currentNumber;
-          calcState.currentOperation = currentOperation;
-          var newNumber = calcState.calcul[calcState.currentOperation](currentResult, currentNumber);
-
-          calcState.currentResult = newNumber;
-        } else {
-          calcState.previousNumber = currentNumber;
-          var newNumber = calcState.calcul[calcState.currentOperation](currentResult, currentNumber);
-
-          calcState.currentResult = newNumber;
-          calcState.currentOperation = currentOperation;
-        }
-        calcState.currentNumber = [0];
-        calcState.updateResult(calcState.currentResult);
-      }
+    handleCalcul: function(result, number, operator) {
+      return calcState.calcul[operator](result, number);
     }
   }
 
@@ -91,53 +68,55 @@ $(document).ready(function() {
 
   // Numbers button click event hanlder
   numberButtons.on('click', function(){
-    resultContainer.removeClass('error');
+    calcState.previousNumber = Number(calcState.currentNumber);
     var clickedNumber = this.dataset.value;
-    calcState.currentNumber.push(clickedNumber);
-    var currentNumber = calcState.arrayToNumber(calcState.currentNumber);
-    // Will display the . before the next number is entered
-    // (as the Number function doesn't return the . until a decimal is found)
-    if (this.dataset.value === '.') {
-      calcState.updateResult(currentNumber + '.');
+
+    if (calcState.decimal && clickedNumber === '.') {  // If not the first time the decimal button is clicked,
+      return null                                      // do nothing
+    } else if (!calcState.decimal && clickedNumber === '.') { // If first time clicking the decimal button
+      calcState.decimal = true;                               // Set decimal to true
+      calcState.currentNumber += clickedNumber;               // Update the number
     } else {
-      calcState.updateResult(currentNumber);
+      if (calcState.currentNumber === '0') {                  // If not an decimal number and current number
+        calcState.currentNumber = '';                         // start with 0, ignore it
+      }
+      calcState.currentNumber += clickedNumber;               // Update the number
     }
-    if (calcState.currentOperation !== '') {
-      calcState.init = false;
-    }
+    calcState.updateResult(calcState.currentNumber);           // Update the result on the screen
   })
 
   // Operators button click event hanlder
   operatorButtons.on('click', function(){
-    var currentNumber = calcState.arrayToNumber(calcState.currentNumber);
-    var currentResult = calcState.currentResult;
-    var currentOperation = this.dataset.value;
-    var previousNumber = calcState.previousNumber;
+    var operator = this.dataset.value;
+    var currentNumber = Number(calcState.currentNumber);
+    calcState.currentOperation = operator;
 
-    calcState.handleCalcul(currentNumber, currentResult, currentOperation, previousNumber)
+
+    if (currentNumber !== 0 && calcState.init) {
+      calcState.currentResult = currentNumber;
+    }
+
+    calcState.updateResult(calcState.currentResult);
+    calcState.resetCurrent();
 
   })
 
   // Equal sign button click event hanlder
   equalButton.on('click', function(){
-    resultContainer.removeClass('error');
-    var currentNumber = calcState.arrayToNumber(calcState.currentNumber);
-    var previousNumber = calcState.previousNumber;
-    var currentResult = calcState.currentResult;
-    if (calcState.currentOperation !== '') {
-      // do the calculation
-      var newNumber = calcState.calcul[calcState.currentOperation](currentResult, currentNumber);
-      calcState.previousNumber = calcState.currentResult;
-      calcState.currentResult = newNumber;
-    } else {
-      // else update the result with the current number
-      calcState.previousNumber = calcState.currentResult;
+    var currentNumber = Number(calcState.currentNumber);
+    var operator = calcState.currentOperation;
+
+    if (currentNumber !== 0 && calcState.init && !operator) {
       calcState.currentResult = currentNumber;
+    } else {
+      if (operator) {
+        var newNumber = calcState.handleCalcul(calcState.currentResult, currentNumber, calcState.currentOperation);
+        calcState.currentResult = newNumber;
+      }
     }
-    // then reset the current number and update the result on screen with the current result
-    calcState.currentNumber = [0];
-    calcState.updateResult(calcState.currentResult);
+    calcState.resetCurrent();
     calcState.currentOperation = '';
+    calcState.updateResult(calcState.currentResult);
   })
 
   // Debug function
