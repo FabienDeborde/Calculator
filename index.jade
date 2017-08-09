@@ -15,29 +15,32 @@ html(lang="en")
       main
         .main-row.row.justify-content-center.align-items-center
           .main-wrapper
-            .calc-row.result-row.justify-content-center.align-items-center
-              .control-button.text-center(data-value="reset")#reset-container AC
+            .calc-row.result-row
               #result-container.text-right 0
+            .calc-row.reset-row
+              .control-button.text-center(data-value="reset")#reset-container AC
+              .control-button.minus (-)
+              .control-button.operator(data-value="/") ÷
             .calc-row.divide-row.justify-content-center.align-items-center.text-center
               .control-button.number(data-value="7") 7
               .control-button.number(data-value="8") 8
               .control-button.number(data-value="9") 9
-              .control-button.operator(data-value="/") ÷
+              .control-button.operator(data-value="*") x
             .calc-row.multiply-row.justify-content-center.align-items-center.text-center
               .control-button.number(data-value="4") 4
               .control-button.number(data-value="5") 5
               .control-button.number(data-value="6") 6
-              .control-button.operator(data-value="*") x
+              .control-button.operator(data-value="-") -
             .calc-row.substract-row.justify-content-center.align-items-center.text-center
               .control-button.number(data-value="1") 1
               .control-button.number(data-value="2") 2
               .control-button.number(data-value="3") 3
-              .control-button.operator(data-value="-") -
+              .control-button.operator(data-value="+") +
             .calc-row.add-row.justify-content-center.align-items-center.text-center
               .control-button.number(data-value="0") 0
               .control-button.number( data-value=".") .
               .control-button.equal(data-value="equal") =
-              .control-button.operator(data-value="+") +
+              
 
   script(src="https://code.jquery.com/jquery-3.1.1.slim.min.js" integrity="sha384-A7FZj7v+d/sdmMqp/nOQwliLvUsJfDHW+k9Omg/a/EheAdgtzNs3hpfag6Ed950n" crossorigin="anonymous")
   script(src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js" integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb" crossorigin="anonymous")

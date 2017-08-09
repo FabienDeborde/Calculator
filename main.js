@@ -7,6 +7,7 @@ $(document).ready(function() {
   var operatorButtons = $('.operator');
   var numberButtons = $('.number');
   var equalButton = $('.equal');
+  var minusButton = $('.minus');
 
   // CalcState will store the current state of the calculator (operation, numbers and result)
   // and also the main methods to update, reset and calculate
@@ -71,6 +72,10 @@ $(document).ready(function() {
     calcState.previousNumber = Number(calcState.currentNumber);
     var clickedNumber = this.dataset.value;
 
+    if (calcState.currentResult !== 0 && calcState.currentOperation === '') {
+      calcState.reset();
+    }
+
     if (calcState.decimal && clickedNumber === '.') {  // If not the first time the decimal button is clicked,
       return null                                      // do nothing
     } else if (!calcState.decimal && clickedNumber === '.') { // If first time clicking the decimal button
@@ -130,6 +135,17 @@ $(document).ready(function() {
     calcState.resetCurrent();
     calcState.currentOperation = '';
     calcState.updateResult(calcState.currentResult);
+  })
+
+  // Minus sign button click event hanlder
+  minusButton.on('click', function(){
+    if (calcState.currentNumber === '0' && calcState.currentResult !== 0) {
+      calcState.currentResult *= -1;
+      calcState.updateResult(calcState.currentResult);
+    } else {
+      calcState.currentNumber *= -1;
+      calcState.updateResult(calcState.currentNumber);
+    }
   })
 
   // Debug function
