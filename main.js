@@ -150,6 +150,6 @@ $(document).ready(function() {
 
   // Debug function
   $('.control-button').on('click', function(){
-    console.log(calcState.currentResult, calcState.currentNumber, calcState.previousNumber, calcState.currentOperation);
+    console.log(calcState.currentResult, calcState.currentNumber, calcState.previousNumber, calcState.currentOperation, calcState.init);
   })
 })
